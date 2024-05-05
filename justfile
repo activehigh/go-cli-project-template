@@ -14,8 +14,8 @@ tidy:
 generate:
     go generate ./...
 
-docker-generate:
-
+docker-generate: tidy vet fmt
+    docker compose up --build go-generate
 
 docker-build: vet fmt tidy
     docker compose up --build service
