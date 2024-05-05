@@ -16,7 +16,7 @@ RUN GOMAXPROCS=1 go install go.uber.org/mock/mockgen@latest &&\
 # Github fingerprint
 # https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
 ENV GITHUB_RSA_SHA256_FINGERPRINT=uNiVztksCsDhcc0u9e8BujQXVUpKZIDTMczCvj3tD2s\
-    GOPRIVATE=github.com/ROKT
+    GOPRIVATE=github.com
 
 RUN apt-get install --no-install-recommends openssh-client git -y
 

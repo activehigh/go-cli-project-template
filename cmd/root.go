@@ -24,9 +24,9 @@ func GetRootCommand() *cobra.Command {
 	versionStr := viper.GetString(config.DKBinaryVersion)
 
 	var rootCommand = &cobra.Command{
-		Use: "dk",
+		Use: "",
 		Short: fmt.Sprintf(
-			"deploy-kit: standardised deployments at Rokt, version: %v",
+			"%v",
 			versionStr,
 		),
 		Example: "dk ...",
