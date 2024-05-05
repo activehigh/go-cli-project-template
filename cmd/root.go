@@ -2,6 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/actvehigh/go-cli-project-template/configs"
+	"github.com/actvehigh/go-cli-project-template/internal/logger"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"slices"
 	"strings"
 )
@@ -9,27 +13,21 @@ import (
 func init() {
 	cobra.OnInitialize(
 		func() {
-			viper.SetEnvPrefix(config.PrefixEnvVars)
+			viper.SetEnvPrefix(configs.PrefixENVVars)
 			viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 			viper.AutomaticEnv()
 
-			logger.InitialiseLogger()
-			config.BindDefaultS3BucketSettings()
+			logger.InitializeLogger()
 		},
 	)
 }
 
 func GetRootCommand() *cobra.Command {
 	// get version
-	versionStr := viper.GetString(config.DKBinaryVersion)
-
 	var rootCommand = &cobra.Command{
-		Use: "",
-		Short: fmt.Sprintf(
-			"%v",
-			versionStr,
-		),
-		Example: "dk ...",
+		Use:     "",
+		Short:   "",
+		Example: "...",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			// Validate the log level arg
 			logLevel := strings.ToLower(viper.GetString("log-level"))
@@ -42,7 +40,7 @@ func GetRootCommand() *cobra.Command {
 				)
 			}
 
-			return config.BindFlags(cmd)
+			return configs.BindFlags(cmd)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Print help screen if no args provided

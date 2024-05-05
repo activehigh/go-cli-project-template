@@ -49,11 +49,11 @@ RUN go generate -v ./...
 
 # Build your app binary
 FROM builder as intermittent-builder
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o runtime ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o runtime ./main.go
 
 # ===========================================================
 
-FROM public.ecr.aws/docker/library/alpine:3.19.1 as builder
+FROM public.ecr.aws/docker/library/alpine:3.19.1 as runtime
 WORKDIR /
 
 RUN apk add --no-cache bash
