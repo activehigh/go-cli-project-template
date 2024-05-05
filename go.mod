@@ -1,4 +1,4 @@
-module github.com/ROKT/<application_name>
+module github.com/actvehigh/<application_name>
 
 go 1.22
 
