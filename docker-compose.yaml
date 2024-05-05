@@ -4,7 +4,7 @@ services:
     platform: linux/arm64
     build:
       dockerfile: Dockerfile
-      context: incident-insight
+      context: .
       target: runtime
       ssh:
         - default
@@ -30,7 +30,7 @@ services:
     build:
       target: builder
       dockerfile: Dockerfile
-      context: incident-insight
+      context: .
       ssh:
         - default
       args:
@@ -84,3 +84,7 @@ services:
       - 4318:4318
     env_file:
       - private.env
+
+volumes:
+  go-modules:
+    driver: local

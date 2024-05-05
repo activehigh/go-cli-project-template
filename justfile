@@ -17,10 +17,10 @@ generate:
 docker-generate: tidy vet fmt
     docker compose up --build go-generate
 
-docker-build: vet fmt tidy
+docker-run: vet fmt tidy
     docker compose up --build service
 
-docker-test: generate
+docker-test: docker-generate
     docker compose up --build service-test
 
 test *path:
