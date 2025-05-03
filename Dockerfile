@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/golang:1.22.0 as builder
+FROM public.ecr.aws/docker/library/golang:1.24.0 AS builder
 
 WORKDIR /app
 
@@ -6,11 +6,11 @@ WORKDIR /app
 HEALTHCHECK NONE
 
 # Install test tools
-RUN GOMAXPROCS=1 go install go.uber.org/mock/mockgen@latest &&\
-    GOMAXPROCS=1 go install github.com/onsi/ginkgo/v2/ginkgo@latest && \
-    GOMAXPROCS=1 go install github.com/jstemmer/go-junit-report@latest && \
-    GOMAXPROCS=1 go install github.com/axw/gocov/gocov@latest && \
-    GOMAXPROCS=1 go install github.com/AlekSi/gocov-xml@latest
+RUN go install go.uber.org/mock/mockgen@latest &&\
+    go install github.com/onsi/ginkgo/v2/ginkgo@latest && \
+    go install github.com/jstemmer/go-junit-report@latest && \
+    go install github.com/axw/gocov/gocov@latest && \
+    go install github.com/AlekSi/gocov-xml@latest
 
 
 # Github fingerprint
@@ -53,7 +53,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o runtime ./main.go
 
 # ===========================================================
 
-FROM public.ecr.aws/docker/library/alpine:3.19.1 as runtime
+FROM public.ecr.aws/docker/library/alpine:3.21 AS runtime
 WORKDIR /
 
 RUN apk add --no-cache bash
