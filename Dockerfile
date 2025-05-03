@@ -42,7 +42,7 @@ COPY configs/ configs/
 COPY internal/ internal/
 
 # Copy test payloads
-COPY test/data/ test/data/
+COPY tests/data/ tests/data/
 
 # generate mocks (run before copying tests as they can change without mocks changing)
 RUN go generate -v ./...

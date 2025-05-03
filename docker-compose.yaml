@@ -75,15 +75,16 @@ services:
       - "rm -rf /app/test/mocks/ &&
         go generate -v /app/..."
 
-  dd-agent:
-    image: public.ecr.aws/datadog/agent
+  aspire-agent:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
     volumes:
-      - ./tests/data/datadog.yaml:/etc/datadog-agent/datadog.yaml
+      - ./tests/data/aspire.json:/app/aspire.json
     ports:
-      - 4317:4317
-      - 4318:4318
-    env_file:
-      - private.env
+      - 18888:18888
+    environment:
+      - Aspire__Dashboard__TelemetryLimits__MaxLogCount=1000
+      - Aspire__Dashboard__TelemetryLimits__MaxTraceCount=1000
+      - Aspire__Dashboard__TelemetryLimits__MaxMetricsCount=1000
 
 volumes:
   go-modules:
