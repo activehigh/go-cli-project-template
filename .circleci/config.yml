@@ -2,30 +2,85 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+orbs:
+  go: circleci/go@2.2.0
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
+  build:
     docker:
-      # Specify the version you desire here
-      # See: https://circleci.com/developer/images/image/cimg/base
-      - image: cimg/base:current
-
-    # Add steps to the job
-    # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
+      - image: cimg/go:1.24.2
     steps:
-      # Checkout the code as the first step.
       - checkout
+      - go/install-packages:
+          pkg: ./...
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: Build
+          command: go build -v ./...
+      - run:
+          name: Test
+          command: go test -v ./...
+
+  cmd-build:
+    docker:
+      - image: cimg/go:1.24.2
+    steps:
+      - checkout
+      - go/install-packages:
+          pkg: ./cmd/...
+      - run:
+          name: Build CMD
+          command: |
+            if [ -d "cmd" ]; then
+              echo "Building cmd directory..."
+              go build -v ./cmd/...
+            else
+              echo "No cmd directory found"
+            fi
+
+  configs-build:
+    docker:
+      - image: cimg/go:1.24.2
+    steps:
+      - checkout
+      - go/install-packages:
+          pkg: ./configs/...
+      - run:
+          name: Build Configs
+          command: |
+            if [ -d "configs" ]; then
+              echo "Building configs directory..."
+              go build -v ./configs/...
+            else
+              echo "No configs directory found"
+            fi
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
+  version: 2
+  build-and-test:
     jobs:
-      - say-hello
+      - build:
+          filters:
+            branches:
+              only: main
+            paths:
+              - "**.go"
+              - "go.mod"
+              - "go.sum"
+      - cmd-build:
+          filters:
+            branches:
+              only: main
+            paths:
+              - "cmd/**"
+      - configs-build:
+          filters:
+            branches:
+              only: main
+            paths:
+              - "configs/**"
+
+              
